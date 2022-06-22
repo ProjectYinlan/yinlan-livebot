@@ -1,0 +1,26 @@
+{
+  "name": "yinlan-livebot",
+  "version": "0.1.0",
+  "description": "Yinlan (Liveroom Services Only Ver.)",
+  "main": "app.js",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "express": "^4.18.1",
+    "node-mirai-sdk": "^0.3.4",
+    "sqlite": "^4.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colour93/yinlan-livebot.git"
+  },
+  "author": "colour93",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/colour93/yinlan-livebot/issues"
+  },
+  "homepage": "https://github.com/colour93/yinlan-livebot#readme"
+}
