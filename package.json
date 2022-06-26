@@ -5,14 +5,16 @@
   "main": "app.js",
   "dependencies": {
     "axios": "^0.27.2",
+    "better-sqlite3": "^7.5.3",
     "express": "^4.18.1",
     "node-mirai-sdk": "^0.3.4",
-    "sqlite": "^4.1.1"
+    "node-schedule": "^2.1.0",
+    "npmlog": "^6.0.2"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "tailwindcss": "^3.1.4"
   },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/colour93/yinlan-livebot.git"
