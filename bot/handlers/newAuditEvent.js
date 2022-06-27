@@ -157,7 +157,11 @@ module.exports = {
                 }
         }
 
-        console.log(result);
+        if (!result.code) {
+            dataDB.prepare(`UPDATE auditList SET status = ? WHERE eventId = ?;`).run(operate, eventId);
+        }
+
+        return result;
 
     }
 

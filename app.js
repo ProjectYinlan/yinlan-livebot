@@ -26,5 +26,7 @@ async function init() {
 
     require('./bot/handlers');
 
+    const express = require('./express');
+
 }
 

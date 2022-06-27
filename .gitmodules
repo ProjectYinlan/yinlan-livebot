@@ -1,0 +1,3 @@
+[submodule "yinlan-livebot-front"]
+	path = yinlan-livebot-front
+	url = git@github.com:colour93/yinlan-livebot-front.git

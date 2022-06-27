@@ -3,6 +3,8 @@
  * 负责 Bot 基本功能控制
  */
 
+const common = require('./common')
+
 module.exports = {
 
     /**
@@ -17,7 +19,7 @@ module.exports = {
      * 基础控制器的回复响应中间件
      * @param {import('node-mirai-sdk').message} message 
      */
-    baseCtrl (message) {
+    baseQuoteCtrl (message) {
 
     }
 

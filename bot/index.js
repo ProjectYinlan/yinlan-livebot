@@ -7,12 +7,16 @@ const logger = require('npmlog');
 
 const utils = require('./controllers/utils');
 
+// const baseCtrl = require('./controllers/base');
+
 const { link } = require('../config.json');
 
 const bot = new Mirai(link);
 
 bot.onMessage(async message => {
 
+    // baseCtrl.baseQuoteCtrl(message);
+    // console.log(message);
 });
 
 // bot.on('newFriendRequest', (data) => {
