@@ -3,8 +3,12 @@
  */
 
 const bot = require('../index')();
-const { newFriendHandler } = require('./newAuditEvent');
+const newAuditEvent = require('./newAuditEvent');
 
 bot.on('newFriendRequest', (data) => {
-    newFriendHandler(data);
+    newAuditEvent.newFriendEventHandler(data);
+})
+
+bot.on('invitedJoinGroupRequest', (data) => {
+    newAuditEvent.newGroupEventHandler(data);
 })
