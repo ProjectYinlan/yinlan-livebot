@@ -25,10 +25,14 @@ router.get('/', async (req, res) => {
     res.send(data);
 });
 
+/**
+ * 数据路由
+ */
+
 router.get('/stats/overview', async (req, res) => {
     data = await statsCtrl.overview();
     res.send({
-        code: 200,
+        code: 0,
         msg: null,
         data
     });
@@ -37,7 +41,7 @@ router.get('/stats/overview', async (req, res) => {
 router.get('/stats/bilibili', async (req, res) => {
     data = await statsCtrl.bilibili();
     res.send({
-        code: 200,
+        code: 0,
         msg: null,
         data
     });
@@ -46,7 +50,7 @@ router.get('/stats/bilibili', async (req, res) => {
 router.get('/stats/yinlan', async (req, res) => {
     data = await statsCtrl.yinlan();
     res.send({
-        code: 200,
+        code: 0,
         msg: null,
         data
     });
@@ -56,19 +60,26 @@ router.get('/stats/yinlan', async (req, res) => {
 router.get('/control/auditList', async (req, res) => {
     data = await controlCtrl.data.auditList();
     res.send({
-        code: 200,
+        code: 0,
         msg: null,
         data
     });
 });
 
+// router.get('/control/auditList/auditDetail')
+
 router.get('/control/contactList', async (req, res) => {
     data = await controlCtrl.data.contactList();
     res.send({
-        code: 200,
+        code: 0,
         msg: null,
         data
     });
 });
+
+/**
+ * 控制路由
+ */
+router.post('/control/auditHandle', controlCtrl.control.auditHandle);
 
 module.exports = router;

@@ -28,5 +28,7 @@ async function init() {
 
     const express = require('./express');
 
+    require('./bot/schedule');
+
 }
 

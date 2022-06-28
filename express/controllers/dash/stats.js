@@ -24,7 +24,7 @@ module.exports = {
 
         let groupCount = (await bot.getGroupList()).length;
         let followCount = 0;
-        let pushCount = 0;
+        let pushCount = dataDB.prepare(`SELECT value FROM stats WHERE key = 'pushCount';`).get();
 
         return {
             groupCount,

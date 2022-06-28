@@ -24,6 +24,11 @@ module.exports = {
 
         const ts = (new Date()).getTime();
 
+        if (groupId) {
+            result = await bot.getGroupMemberInfo(groupId, bot.qq);
+            groupName = result.group.name;
+        }
+
         // 先判断是否自动同意
         auto = configDB.prepare(`SELECT value FROM numberConfig WHERE key = 'autoAcceptFriend';`).get();
         if (auto && auto.value) {
@@ -37,9 +42,9 @@ module.exports = {
         
         // 插数据库
         result = dataDB.prepare(`
-            INSERT INTO auditList (eventId, type, fromId, groupId, nick, message, ts, status)
-            VALUES (?, 'friend', ?, ?, ?, ?, ?, ?);
-        `).run(eventId, fromId, groupId, nick, message, ts, status);
+            INSERT INTO auditList (eventId, type, fromId, groupId, groupName, nick, message, ts, status)
+            VALUES (?, 'friend', ?, ?, ?, ?, ?, ?, ?);
+        `).run(eventId, fromId, groupId, groupName, nick, message, ts, status);
 
         // 插失败
         if (!result.changes) {
@@ -100,7 +105,7 @@ module.exports = {
 
         if (!event) {
             return {
-                code: 404,
+                code: -404,
                 msg: "eventId不存在或已被处理"
             }
         }
@@ -127,14 +132,14 @@ module.exports = {
                     }
                 } else {
                     return {
-                        code: 500,
+                        code: -500,
                         msg: "内部错误：更新status到ignore时出错"
                     }
                 }
         
             default:
                 return {
-                    code: 500,
+                    code: -400,
                     msg: "operate错误"
                 }
         }
@@ -152,7 +157,7 @@ module.exports = {
         
             default:
                 return {
-                    code: 500,
+                    code: -500,
                     msg: "内部错误：数据库中event对应type不正确"
                 }
         }
@@ -162,6 +167,44 @@ module.exports = {
         }
 
         return result;
+
+    },
+
+    /**
+     * 获取申请事件列表
+     */
+    async auditList() {
+
+        let data = []
+
+        let auditList = dataDB.prepare(`SELECT * FROM auditList WHERE status = 'pending' ORDER BY ts DESC;`).all();
+
+        auditList.forEach(auditItem => {
+            if (auditItem.type == 'friend') {
+                data.push({
+                    eid: auditItem.eventId,
+                    type: auditItem.type,
+                    id: auditItem.fromId,
+                    name: auditItem.nick,
+                    fromId: auditItem.groupId,
+                    fromName: auditItem.groupName,
+                    desc: auditItem.message,
+                    ts: auditItem.ts
+                })
+            } else {
+                data.push({
+                    eid: auditItem.eventId,
+                    type: auditItem.type,
+                    id: auditItem.groupId,
+                    name: auditItem.groupName,
+                    fromId: auditItem.fromId,
+                    fromName: auditItem.nick,
+                    ts: auditItem.ts
+                })
+            }
+        })
+
+        return data;
 
     }
 

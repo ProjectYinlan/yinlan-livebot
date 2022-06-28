@@ -14,7 +14,8 @@ const { link } = require('../config.json');
 const bot = new Mirai(link);
 
 bot.onMessage(async message => {
-
+    // r = await bot.getGroupMemberInfo(259565487, bot.qq);
+    // console.log(r);
     // baseCtrl.baseQuoteCtrl(message);
     // console.log(message);
 });

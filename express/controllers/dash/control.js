@@ -5,6 +5,9 @@
 const { version } = require('../../../package.json');
 
 const { dataDB, configDB } = require('../../../db');
+const responder = require('../responder');
+const newAuditEvent = require('../../../bot/handlers/newAuditEvent');
+const common = require('../../../bot/controllers/common');
 
 //  const axios = require('axios');
 const bot = require('../../../bot')();
@@ -30,34 +33,7 @@ module.exports = {
          */
         async auditList() {
 
-            let data = []
-
-            // 开发模式，这里没有加 pending 限制
-            let auditList = dataDB.prepare(`SELECT * FROM auditList ORDER BY ts DESC;`).all();
-
-            auditList.forEach(auditItem => {
-                if (auditItem.type == 'friend') {
-                    data.push({
-                        eid: auditItem.eventId,
-                        type: auditItem.type,
-                        name: auditItem.nick,
-                        id: auditItem.fromId,
-                        desc: auditItem.message,
-                        ts: auditItem.ts
-                    })
-                } else {
-                    data.push({
-                        eid: auditItem.eventId,
-                        type: auditItem.type,
-                        name: auditItem.groupName,
-                        id: auditItem.groupId,
-                        desc: `来自 ${auditItem.nick} (${auditItem.fromId}) 的邀请`,
-                        ts: auditItem.ts
-                    })
-                }
-            })
-
-            return data;
+            return (await newAuditEvent.auditList());
 
         },
 
@@ -82,12 +58,8 @@ module.exports = {
          * }
          */
         async contactList() {
-            
+
             let group = await bot.getGroupList();
-            group = group.map((e) => {
-                delete e.permission;
-                return e;
-            })
 
             let friend = await bot.getFriendList();
             friend = friend.map((e) => {
@@ -101,6 +73,36 @@ module.exports = {
                 group,
                 friend
             }
+
+        }
+
+    },
+
+    /**
+     * 控制路由
+     */
+    control: {
+
+        /**
+         * 对申请的处理
+         * @param {import('express').req} req
+         * @param {import('express').res} res
+         */
+        async auditHandle(req, res) {
+
+            const { eventId, operate } = req.body;
+            if (!eventId || !operate) {
+                responder.paramsError(res);
+                return;
+            }
+
+            data = await newAuditEvent.newAuditHandle(eventId, operate);
+
+            if (!data.code) {
+                await common.sendManageGroupMessage(`[通知] 请求 ${eventId} 已由面板操作`);
+            }
+
+            res.send(data);
 
         }
 
