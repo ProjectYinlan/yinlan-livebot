@@ -82,4 +82,8 @@ router.get('/control/contactList', async (req, res) => {
  */
 router.post('/control/auditHandle', controlCtrl.control.auditHandle);
 
+router.post('/control/broadcast', controlCtrl.control.broadcast);
+
+router.post('/control/contactList/remove', controlCtrl.control.removeContact);
+
 module.exports = router;

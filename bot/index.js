@@ -18,6 +18,10 @@ bot.onMessage(async message => {
     // console.log(r);
     // baseCtrl.baseQuoteCtrl(message);
     // console.log(message);
+    // if (message.sender.id == 1285419578) {
+    //     result = await bot.quit(275720357);
+    //     console.log(result);
+    // }
 });
 
 // bot.on('newFriendRequest', (data) => {

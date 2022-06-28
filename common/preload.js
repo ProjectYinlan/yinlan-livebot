@@ -7,6 +7,10 @@ const logger = require('npmlog');
 const { configDB } = require('../db');
 
 module.exports = async function () {
+
+    // 清空状态数据库
+    configDB.prepare(`UPDATE statusConfig SET value = 0;`).run();
+
     justABrand();
     startTimer();
 }

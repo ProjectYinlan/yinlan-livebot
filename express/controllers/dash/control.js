@@ -6,8 +6,10 @@ const { version } = require('../../../package.json');
 
 const { dataDB, configDB } = require('../../../db');
 const responder = require('../responder');
-const newAuditEvent = require('../../../bot/handlers/newAuditEvent');
+const auditHandler = require('../../../bot/uniControllers/auditHandler');
 const common = require('../../../bot/controllers/common');
+const contactManage = require('../../../bot/uniControllers/contactManage');
+const broadcast = require('../../../bot/uniControllers/broadcast');
 
 //  const axios = require('axios');
 const bot = require('../../../bot')();
@@ -33,7 +35,7 @@ module.exports = {
          */
         async auditList() {
 
-            return (await newAuditEvent.auditList());
+            return (await auditHandler.auditList());
 
         },
 
@@ -96,10 +98,56 @@ module.exports = {
                 return;
             }
 
-            data = await newAuditEvent.newAuditHandle(eventId, operate);
+            data = await auditHandler.auditHandle(eventId, operate);
 
             if (!data.code) {
                 await common.sendManageGroupMessage(`[通知] 请求 ${eventId} 已由面板操作`);
+            }
+
+            res.send(data);
+
+        },
+
+        /**
+         * 广播
+         * @param {import('express').req} req
+         * @param {import('express').res} res
+         */
+        async broadcast(req, res) {
+
+            const { content, type } = req.body;
+            if (!content || !type) {
+                responder.paramsError(res);
+                return;
+            }
+
+            data = await broadcast(content, type);
+
+            if (!data.code) {
+                await common.sendManageGroupMessage(`[通知] 已由面板执行群发`);
+            }
+
+            res.send(data);
+
+        },
+
+        /**
+         * 删除好友 / 群聊
+         * @param {import('express').req} req
+         * @param {import('express').res} res
+         */
+        async removeContact(req, res) {
+
+            const { id, type } = req.body;
+            if (!id || !type) {
+                responder.paramsError(res);
+                return;
+            }
+
+            data = await contactManage.remove(id, type);
+
+            if (!data.code) {
+                await common.sendManageGroupMessage(`[通知] 已由面板端${type == 'friend' ? "删除好友" : ""}${type == 'group' ? "退出群聊" : ""} ${id}`);
             }
 
             res.send(data);

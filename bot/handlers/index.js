@@ -18,5 +18,6 @@ bot.on('invitedJoinGroupRequest', (data) => {
 
 bot.onMessage(message => {
     baseCtrl.baseQuoteCtrl(message);
+    manageCtrl.manageRoute(message);
     manageCtrl.manageQuoteRoute(message);
 })

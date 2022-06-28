@@ -21,9 +21,9 @@ module.exports = {
      * @return {string} normal | admin | owner
      */
     verifyAccess(id) {
-        result = configDB.prepare('SELECT role FROM managers WHERE id = ?;').get(id);
+        let result = configDB.prepare('SELECT role FROM managers WHERE id = ?;').get(id);
         if (!result) {
-            result.role = 'normal';
+            result = { role: 'normal' };
         }
         return result.role;
     },

@@ -4,9 +4,41 @@
 
 const common = require('../common');
 
-const newAuditEvent = require('../../handlers/newAuditEvent');
+const auditHandler = require('../../uniControllers/auditHandler');
+const contactManage = require('../../uniControllers/contactManage');
 
 module.exports = {
+
+    /**
+     * 管理控制器
+     */
+    async manageRoute(message) {
+
+        const data = common.compareKeyword(message, null, {
+            permission: ['botAdmin']
+        })
+        if (!data) return;
+        const { msgAry, msg } = data;
+
+        let replyMsg = "";
+
+        switch (msgAry[0]) {
+
+            case '.退出群聊':
+                replyMsg = await remove(parseInt(msgAry[1]), 'group');
+                break;
+
+            case '.删除好友':
+                replyMsg = await remove(parseInt(msgAry[1]), 'friend');
+                break;
+        
+            default:
+                break;
+        }
+
+        message.quoteReply(replyMsg);
+
+    },
 
     /**
      * 管理控制器 带回复
@@ -67,7 +99,7 @@ async function auditCtrl(eventId, operateString) {
             return "操作有误uwu";
     }
 
-    result = await newAuditEvent.newAuditHandle(eventId, operate);
+    result = await auditHandler.auditHandle(eventId, operate);
 
     if (result.code) {
         return `发生错误：${result.code}\n${result.msg}`;
@@ -75,5 +107,23 @@ async function auditCtrl(eventId, operateString) {
         return `操作成功`;
     }
 
+
+}
+
+
+/**
+ * 退群删好友
+ * @param {number} id id
+ * @param {string} type 类型
+ */
+async function remove(id, type) {
+
+    result = await contactManage.remove(id, type);
+
+    if (result.code) {
+        return `发生错误：${result.code}\n${result.msg}`;
+    } else {
+        return `操作成功`;
+    }
 
 }
