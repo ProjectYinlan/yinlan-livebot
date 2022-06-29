@@ -70,6 +70,7 @@ app.use('/api', router);
 
 // 设置端口
 logger.info(`Epxress 运行于 ${port}`);
+logger.info(`面板地址 http://localhost:${port}/`);
 app.set('port', port);
 
 // 创建 HTTP 服务实例

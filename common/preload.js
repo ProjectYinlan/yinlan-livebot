@@ -11,7 +11,6 @@ module.exports = async function () {
     // 清空状态数据库
     configDB.prepare(`UPDATE statusConfig SET value = 0;`).run();
 
-    justABrand();
     startTimer();
 }
 
@@ -31,21 +30,4 @@ function startTimer() {
         logger.info("已记录启动时间");
     }
     return;
-} 
-
-function justABrand() {
-    console.log(`
-
-    __     ___       _             
-    \\ \\   / (_)     | |            
-     \\ \\_/ / _ _ __ | | __ _ _ __  
-      \\   / | | '_ \\| |/ _\` | '_ \\ 
-       | |  | | | | | | (_| | | | |
-       |_|  |_|_| |_|_\\\\__,_|_| |_|
-                       
-
-    Author: 玖叁 @colour93
-    GitHub: https://github.com/yinlan-livebot
-
-`)
 }

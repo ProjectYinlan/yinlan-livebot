@@ -4,12 +4,10 @@ const express = require('express');
 
 const { version } = require('../../package.json');
 
+const config = require('../../config.json');
+
 // 初始化路由
 const router = express.Router();
-
-// 引入控制器
-const transferRouter = require('./transfer');
-const dashRouter = require('./dash');
 
 router.get('/', (req, res) => {
     res.send({
@@ -21,14 +19,13 @@ router.get('/', (req, res) => {
     })
 });
 
-router.use('/transfer', transferRouter)
+router.use('/welcome', require('./welcome'));
 
-router.use('/dash', dashRouter);
+router.use('/transfer', require('./transfer'))
 
-
-
-
-
+if (config.link) {
+    router.use('/dash', require('./dash'));
+}
 
 
 module.exports = router;

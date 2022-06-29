@@ -19,16 +19,23 @@ init();
 
 async function init() {
 
-    // 加载预处理
-    await require('./common/preload')();
+    // 配置文件&数据库检查
+    result = await require('./common/configCheck')();
 
-    const bot = await require('./bot')();
-
-    require('./bot/handlers');
-
+    if (!result) {
+        
+        // 加载预处理
+        await require('./common/preload')();
+    
+        const bot = await require('./bot')();
+    
+        require('./bot/handlers');
+        
+        require('./bot/schedule');
+        
+    }
+    
     const express = require('./express');
-
-    require('./bot/schedule');
 
 }
 

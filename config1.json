@@ -1,0 +1,12 @@
+{
+    "link": {
+        "host": "http://localhost:26393",
+        "verifyKey": "dvnko4WsxMi8",
+        "qq": 775746622,
+        "enableWebsocket": true
+    },
+    "http": {
+        "port": 21050,
+        "secret": "IyNBsffOSe-u"
+    }
+}
