@@ -20,6 +20,7 @@ router.get('/', async (req, res) => {
     data.data.stats.yinlan = await statsCtrl.yinlan();
 
     data.data.cards.auditList = await controlCtrl.data.auditList();
+    data.data.cards.liveroomOptions = await controlCtrl.data.liveroomOptions();
     data.data.cards.contactList = await controlCtrl.data.contactList();
 
     res.send(data);
@@ -66,7 +67,14 @@ router.get('/control/auditList', async (req, res) => {
     });
 });
 
-// router.get('/control/auditList/auditDetail')
+router.get('/control/liveroomOptions', async(req, res) => {
+    data = await controlCtrl.data.liveroomOptions();
+    res.send({
+        code: 0,
+        msg: null,
+        data
+    });
+})
 
 router.get('/control/contactList', async (req, res) => {
     data = await controlCtrl.data.contactList();
@@ -83,6 +91,14 @@ router.get('/control/contactList', async (req, res) => {
 router.post('/control/auditHandle', controlCtrl.control.auditHandle);
 
 router.post('/control/broadcast', controlCtrl.control.broadcast);
+
+router.post('/control/liveroomOptions/setCheckOptions', controlCtrl.control.liveroomOptions.setCheckOptions);
+
+router.get('/control/liveroomOptions/getLoginQR', controlCtrl.control.liveroomOptions.getLoginQR);
+
+router.post('/control/liveroomOptions/getLoginInfo', controlCtrl.control.liveroomOptions.getLoginInfo);
+
+router.get('/control/liveroomOptions/logout', controlCtrl.control.liveroomOptions.logout);
 
 router.post('/control/contactList/remove', controlCtrl.control.removeContact);
 

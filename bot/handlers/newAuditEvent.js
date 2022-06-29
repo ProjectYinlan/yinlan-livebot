@@ -20,7 +20,7 @@ module.exports = {
 
         const { eventId, fromId, groupId, nick, message } = data;
 
-        let replyMsg = "", status = "";
+        let replyMsg = "", status = "", groupName = null;
 
         const ts = (new Date()).getTime();
 

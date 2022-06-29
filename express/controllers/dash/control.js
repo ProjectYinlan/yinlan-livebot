@@ -10,6 +10,7 @@ const auditHandler = require('../../../bot/uniControllers/auditHandler');
 const common = require('../../../bot/controllers/common');
 const contactManage = require('../../../bot/uniControllers/contactManage');
 const broadcast = require('../../../bot/uniControllers/broadcast');
+const biliCheck = require('../../../bot/uniControllers/biliCheck');
 
 //  const axios = require('axios');
 const bot = require('../../../bot')();
@@ -40,6 +41,24 @@ module.exports = {
         },
 
 
+        /**
+         * 获取直播检测选项
+         * @example
+         * {
+         *  mode: auth | anonymous
+         *  accountStatus: authed | unauth
+         *  interval: Number (10-90) | (60-90)
+         * }
+         */
+        async liveroomOptions () {
+
+            let { data, code } = await biliCheck.getWorkMode(true);
+            if (code) return null;
+            data.accountStatus = (data.account && data.account.mid) ? 'authed' : 'unauth';
+
+            return data;
+
+        },
 
         /**
          * 获取联系人列表
@@ -64,8 +83,23 @@ module.exports = {
             let group = await bot.getGroupList();
 
             let friend = await bot.getFriendList();
+
+            let managers = configDB.prepare(`SELECT * FROM managers WHERE role = 'owner' OR role = 'admin';`).all();
+
             friend = friend.map((e) => {
                 e.name = e.nickname;
+                if (e.id == bot.qq) {
+                    e.role = 'bot';
+                } else {
+                    for (let i = 0; i < managers.length; i++) {
+                        const manager = managers[i];
+                        if (manager.id == e.id) {
+                            e.role = manager.role;
+                        } else {
+                            e.role = 'normal';
+                        }
+                    }
+                }
                 delete e.remark;
                 delete e.nickname;
                 return e;
@@ -128,6 +162,67 @@ module.exports = {
             }
 
             res.send(data);
+
+        },
+
+        /**
+         * 直播间选项
+         */
+        liveroomOptions: {
+
+            /**
+             * 修改直播检测参数
+             * @param {import('express').req} req
+             * @param {import('express').res} res
+             */
+            async setCheckOptions(req, res) {
+
+                result = await biliCheck.setCheckOptions(req.body);
+                res.send(result);
+
+            },
+
+            /**
+             * 获取登录二维码
+             * @param {import('express').req} req
+             * @param {import('express').res} res
+             */
+            async getLoginQR(req, res) {
+
+                result = await biliCheck.getLoginQR();
+                res.send(result);
+
+            },
+
+            /**
+             * 获取登录信息
+             * @param {import('express').req} req
+             * @param {import('express').res} res
+             */
+            async getLoginInfo(req, res) {
+
+                const { oauthKey } = req.body;
+                if (!oauthKey) {
+                    responder.paramsError(res);
+                    return;
+                }
+
+                result = await biliCheck.getLoginInfo(oauthKey);
+                res.send(result);
+
+            },
+
+            /**
+             * 登出
+             * @param {import('express').req} req
+             * @param {import('express').res} res
+             */
+            async logout(req, res) {
+
+                result = await biliCheck.logout();
+                res.send(result);
+
+            },
 
         },
 

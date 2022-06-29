@@ -5,6 +5,7 @@
 const { version } = require('../../../package.json');
 
 const { dataDB, configDB } = require('../../../db');
+const biliCheck = require('../../../bot/uniControllers/biliCheck');
 
 //  const axios = require('axios');
 const bot = require('../../../bot')();
@@ -45,9 +46,15 @@ module.exports = {
      */
     async bilibili() {
 
-        let mode = 'auth';
-        let accountName = "路过的玖叁";
-        let followUserCount = 0;
+        let { data, code } = await biliCheck.getWorkMode(true);
+        if (code) return null;
+
+        let { mode, account } = data;
+        let accountName, followUserCount;
+        if (account) {
+            accountName = account.uname;
+            followUserCount = account.following;
+        }
 
         return {
             mode,
