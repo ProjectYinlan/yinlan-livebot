@@ -10,7 +10,11 @@ const config = require('../../config.json');
 const router = express.Router();
 
 router.get('/', (req, res) => {
+
+    let status = config.link ? 'active' : 'uninitialized';
+
     res.send({
+        status,
         yinlan: 'livebot',
         version,
         uwu: 'Made with ♥ by colour93',

@@ -18,6 +18,7 @@ logger.info("初始化 Express");
 
 // 引入路由
 const router = require('./routes');
+const path = require('path');
 
 // 配置文件
 const config = require('../config.json').http;
@@ -63,7 +64,7 @@ if (process.env.dev) {
 }
 
 // 前端
-app.use('/', express.static('./front'))
+app.use('/', express.static(path.resolve(__dirname, 'public')))
 
 // 设置路由
 app.use('/api', router);
