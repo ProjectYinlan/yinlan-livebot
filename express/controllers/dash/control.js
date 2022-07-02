@@ -179,7 +179,7 @@ module.exports = {
             data = await auditHandler.auditHandle(eventId, operate);
 
             if (!data.code) {
-                await common.sendManageGroupMessage(`[通知] 请求 ${eventId} 已由面板操作`);
+                common.sendManageGroupMessage(`请求 ${eventId} 已由面板操作`, true);
             }
 
             res.send(data);
@@ -200,10 +200,6 @@ module.exports = {
             }
 
             data = await broadcast(content, type);
-
-            if (!data.code) {
-                await common.sendManageGroupMessage(`[通知] 已由面板执行群发`);
-            }
 
             res.send(data);
 
@@ -329,7 +325,6 @@ module.exports = {
                 }
 
                 res.send(await biliBind.setAtAll(uid, groupId, atAll));
-
             },
 
             /**
