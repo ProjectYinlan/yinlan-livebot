@@ -11,6 +11,7 @@ const common = require('../../../bot/controllers/common');
 const contactManage = require('../../../bot/uniControllers/contactManage');
 const broadcast = require('../../../bot/uniControllers/broadcast');
 const biliCheck = require('../../../bot/uniControllers/biliCheck');
+const biliBind = require('../../../bot/uniControllers/biliBind');
 
 //  const axios = require('axios');
 const bot = require('../../../bot')();
@@ -37,6 +38,49 @@ module.exports = {
         async auditList() {
 
             return (await auditHandler.auditList());
+
+        },
+
+        /**
+         * 获取直播间绑定列表
+         * @example
+         * {
+         *  groupView: [{
+         *      name: String,
+         *      id: Number,
+         *      count: Number
+         *  }],
+         *  liveroomView: [{
+         *      name: String,
+         *      id: Number,
+         *      count: Number
+         *  }]
+         * }
+         */
+        async liveroomList() {
+
+            let groupView = dataDB.prepare(`SELECT groupId AS 'id', COUNT() AS 'count' FROM liveroom_group GROUP BY groupId;`).all();
+
+            let groupList = await bot.getGroupList();
+
+            groupView.map((groupItem) => {
+                groupItem.name = groupList.filter((group) => {
+                    if (group.id == groupItem.id) return true;
+                })[0]['name'];
+            })
+
+            let liveroomView = dataDB.prepare(`
+                SELECT liverooms.uid AS 'id', liverooms.uname AS 'name', IFNULL(COUNT(liveroom_group.uid), 0) AS 'count'
+                FROM liverooms
+                LEFT JOIN liveroom_group
+                ON liverooms.uid = liveroom_group.uid
+                GROUP BY liverooms.uid;
+            `).all();
+
+            return {
+                groupView,
+                liveroomView
+            }
 
         },
 
@@ -162,6 +206,192 @@ module.exports = {
             }
 
             res.send(data);
+
+        },
+
+        /**
+         * 直播间列表
+         */
+        liveroomList: {
+
+            /**
+             * 获取自动补全候选信息
+             * @param {import('express').req} req
+             * @param {import('express').res} res
+             */
+            async getCondidateData (req, res) {
+
+                let groupList = await bot.getGroupList();
+
+                groupList = groupList.map((item) => {
+                    delete item.permission;
+                    return item;
+                })
+
+                let liveroomListResult = biliBind.getUsers();
+                if (liveroomListResult.code != 0) {
+                    res.send(liveroomListResult);
+                    return;
+                };
+
+                let liveroomList = liveroomListResult.data.map((item) => {
+                    return {
+                        id: item.uid,
+                        name: item.uname
+                    }
+                })
+
+                res.send({
+                    code: 0,
+                    msg: null,
+                    data: {
+                        groupList,
+                        liveroomList
+                    }
+                })
+
+            },
+
+            /**
+             * 绑定新的直播间
+             * @param {import('express').req} req
+             * @param {import('express').res} res
+             */
+            async addNewBind (req, res) {
+
+                const { uid, groupId, atAll } = req.body;
+
+                if (
+                    !uid || typeof(uid) != 'number' ||
+                    !groupId || typeof(groupId) != 'number'
+                ) {
+                    responder.paramsError(res);
+                    return;
+                }
+
+                result = await biliBind.bindLiveroom(groupId, uid, atAll);
+                res.send(result);
+
+            },
+
+            /**
+             * 获取群绑定信息详情
+             * @param {import('express').req} req
+             * @param {import('express').res} res
+             */
+            async getGroupDetail (req, res) {
+
+                const { groupId } = req.query;
+
+                if (!groupId) {
+                    responder.paramsError(res);
+                    return;
+                }
+
+                res.send(await biliBind.getGroupDetail(groupId));
+
+            },
+
+            /**
+             * 获取直播间绑定信息详情
+             * @param {import('express').req} req
+             * @param {import('express').res} res
+             */
+            async getLiveroomDetail (req, res) {
+                
+                const { uid } = req.query;
+
+                if (!uid) {
+                    responder.paramsError(res);
+                    return;
+                }
+
+                res.send(await biliBind.getLiveroomDetail(uid));
+
+            },
+
+            /**
+             * 设置绑定条目的直播全体提醒
+             * @param {import('express').req} req
+             * @param {import('express').res} res
+             */
+            async setAtAll (req, res) {
+
+                const { uid, groupId, atAll } = req.body;
+
+                if (
+                    !uid || typeof(uid) != 'number' ||
+                    !groupId || typeof(groupId) != 'number' ||
+                    typeof(atAll) != 'boolean'
+                ) {
+                    responder.paramsError(res);
+                    return;
+                }
+
+                res.send(await biliBind.setAtAll(uid, groupId, atAll));
+
+            },
+
+            /**
+             * 解除绑定
+             * @param {import('express').req} req
+             * @param {import('express').res} res
+             */
+            async unbind (req, res) {
+
+                const { uid, groupId } = req.body;
+
+                if (
+                    !uid || typeof(uid) != 'number' ||
+                    !groupId || typeof(groupId) != 'number'
+                ) {
+                    responder.paramsError(res);
+                    return;
+                }
+
+                res.send(await biliBind.unbind(uid, groupId));
+
+            },
+
+            /**
+             * 清空群聊所有直播间
+             * @param {import('express').req} req
+             * @param {import('express').res} res
+             */
+            async clearGroup (req, res) {
+
+                const { groupId } = req.body;
+
+                if (
+                    !groupId || typeof(groupId) != 'number'
+                ) {
+                    responder.paramsError(res);
+                    return;
+                }
+
+                res.send(await biliBind.clearGroup(groupId));
+
+            },
+
+            /**
+             * 清空群聊所有直播间
+             * @param {import('express').req} req
+             * @param {import('express').res} res
+             */
+            async removeLiveroom (req, res) {
+
+                const { uid } = req.body;
+
+                if (
+                    !uid || typeof(uid) != 'number'
+                ) {
+                    responder.paramsError(res);
+                    return;
+                }
+
+                res.send(await biliBind.removeLiveroom(uid));
+
+            },
 
         },
 

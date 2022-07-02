@@ -11,8 +11,8 @@ const router = express.Router();
 // 引入控制器
 const transferCtrl = require('../controllers/transfer');
 
-router.get('/biliAvatar', async (req, res) => {
-    await transferCtrl.biliAvatar(req, res);
-});
+router.get('/biliAvatar', transferCtrl.biliAvatar);
+
+router.get('/biliInfo', transferCtrl.biliInfo);
 
 module.exports = router;

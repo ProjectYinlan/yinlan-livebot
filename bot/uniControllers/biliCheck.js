@@ -4,9 +4,6 @@
  */
 
 const axios = require('axios');
-const biliAxios = require('../../common/biliAxios');
-
-const qs = require('querystring');
 
 const { configDB } = require("../../db");
 
@@ -58,6 +55,11 @@ module.exports = {
         }
 
         data.cookie = result.value;
+
+        let cookieObj = data.cookie.split(";").map(item => item.split("="));
+        cookieObj.forEach(cookieItem => {
+            if (cookieItem[0] == 'bili_jct') data.csrf = cookieItem[1];
+        })
 
         if (info) {
 
@@ -126,7 +128,7 @@ module.exports = {
      */
     async getLoginQR() {
 
-        result = await biliAxios.get('http://passport.bilibili.com/qrcode/getLoginUrl').then(resp => resp.data);
+        result = await axios.get('http://passport.bilibili.com/qrcode/getLoginUrl').then(resp => resp.data);
 
         if (result.code) {
             return result;
@@ -150,15 +152,15 @@ module.exports = {
      */
     async getLoginInfo(oauthKey) {
 
-        let resp = await biliAxios({
+        let resp = await axios({
             method: 'post',
             url: 'http://passport.bilibili.com/qrcode/getLoginInfo',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            data: qs.stringify({
+            data: (new URLSearchParams({
                 oauthKey
-            })
+            })).toString()
         });
 
         let result = resp.data;

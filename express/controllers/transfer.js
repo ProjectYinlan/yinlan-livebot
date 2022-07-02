@@ -3,6 +3,7 @@
  */
 
 const axios = require('axios');
+const biliBind = require('../../bot/uniControllers/biliBind');
 
 module.exports = {
 
@@ -40,6 +41,22 @@ module.exports = {
             res.end(resp.data.toString('binary'), 'binary')
         })
 
+    },
+
+
+    /**
+     * 用户个人信息
+     * @param {import('express').req} req
+     * @param {import('express').res} res
+     */
+    async biliInfo (req, res) {
+
+        const { uid } = req.query;
+        
+        let result = await biliBind.getUserInfo(uid);
+
+        res.send(result);
+        
     }
 
 }

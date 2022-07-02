@@ -19,6 +19,7 @@ router.get('/', async (req, res) => {
     data.data.stats.bilibili = await statsCtrl.bilibili();
     data.data.stats.yinlan = await statsCtrl.yinlan();
 
+    data.data.cards.liveroomList = await controlCtrl.data.liveroomList();
     data.data.cards.auditList = await controlCtrl.data.auditList();
     data.data.cards.liveroomOptions = await controlCtrl.data.liveroomOptions();
     data.data.cards.contactList = await controlCtrl.data.contactList();
@@ -67,6 +68,15 @@ router.get('/control/auditList', async (req, res) => {
     });
 });
 
+router.get('/control/liveroomList', async (req, res) => {
+    data = await controlCtrl.data.liveroomList();
+    res.send({
+        code: 0,
+        msg: null,
+        data
+    })
+})
+
 router.get('/control/liveroomOptions', async(req, res) => {
     data = await controlCtrl.data.liveroomOptions();
     res.send({
@@ -91,6 +101,22 @@ router.get('/control/contactList', async (req, res) => {
 router.post('/control/auditHandle', controlCtrl.control.auditHandle);
 
 router.post('/control/broadcast', controlCtrl.control.broadcast);
+
+router.get('/control/liveroomList/getCondidateData', controlCtrl.control.liveroomList.getCondidateData);
+
+router.get('/control/liveroomList/getGroupDetail', controlCtrl.control.liveroomList.getGroupDetail);
+
+router.get('/control/liveroomList/getLiveroomDetail', controlCtrl.control.liveroomList.getLiveroomDetail);
+
+router.post('/control/liveroomList/setAtAll', controlCtrl.control.liveroomList.setAtAll);
+
+router.post('/control/liveroomList/addNewBind', controlCtrl.control.liveroomList.addNewBind);
+
+router.post('/control/liveroomList/unbind', controlCtrl.control.liveroomList.unbind);
+
+router.post('/control/liveroomList/clearGroup', controlCtrl.control.liveroomList.clearGroup);
+
+router.post('/control/liveroomList/removeLiveroom', controlCtrl.control.liveroomList.removeLiveroom);
 
 router.post('/control/liveroomOptions/setCheckOptions', controlCtrl.control.liveroomOptions.setCheckOptions);
 

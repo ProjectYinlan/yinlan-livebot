@@ -24,7 +24,7 @@ module.exports = {
     async overview() {
 
         let groupCount = (await bot.getGroupList()).length;
-        let followCount = 0;
+        let followCount = (dataDB.prepare(`SELECT count() AS 'count' FROM liverooms;`).get()).count;
         let pushCount = (dataDB.prepare(`SELECT value FROM stats WHERE key = 'pushCount';`).get()).value;
 
         return {
