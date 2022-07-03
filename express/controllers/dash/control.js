@@ -2,6 +2,8 @@
  * 面板数据API control 路由
  */
 
+const fs = require('fs');
+
 const { version } = require('../../../package.json');
 
 const { dataDB, configDB } = require('../../../db');
@@ -12,8 +14,6 @@ const contactManage = require('../../../bot/uniControllers/contactManage');
 const broadcast = require('../../../bot/uniControllers/broadcast');
 const biliCheck = require('../../../bot/uniControllers/biliCheck');
 const biliBind = require('../../../bot/uniControllers/biliBind');
-
-//  const axios = require('axios');
 const bot = require('../../../bot')();
 
 module.exports = {
@@ -162,6 +162,32 @@ module.exports = {
      * 控制路由
      */
     control: {
+
+        /**
+         * 设置
+         */
+        setting: {
+
+            /**
+             * 重置设置
+             * @param {import('express').req} req
+             * @param {import('express').res} res
+             */
+            async resetConfig (req, res) {
+
+                fs.unlinkSync('config.json');
+
+                res.send({
+                    code: 0,
+                    msg: "已重置，请手动重启程序"
+                });
+
+                process.exit();
+
+            }
+
+
+        },
 
         /**
          * 对申请的处理
@@ -467,7 +493,7 @@ module.exports = {
             data = await contactManage.remove(id, type);
 
             if (!data.code) {
-                await common.sendManageGroupMessage(`[通知] 已由面板端${type == 'friend' ? "删除好友" : ""}${type == 'group' ? "退出群聊" : ""} ${id}`);
+                await common.sendManageGroupMessage(`已由面板端${type == 'friend' ? "删除好友" : ""}${type == 'group' ? "退出群聊" : ""} ${id}`);
             }
 
             res.send(data);

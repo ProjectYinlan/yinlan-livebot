@@ -23,12 +23,17 @@ router.get('/', (req, res) => {
     })
 });
 
-router.use('/welcome', require('./welcome'));
-
 router.use('/transfer', require('./transfer'))
 
 if (config.link) {
-    router.use('/dash', require('./dash'));
+    if (process.env.dev) {
+        router.use('/dash', require('./dash'));
+    } else {
+        router.use('/dash', require('../middlewares/auth'), require('./dash'));
+    }
+    router.use('/auth', require('./auth'))
+} else {
+    router.use('/welcome', require('./welcome'));
 }
 
 

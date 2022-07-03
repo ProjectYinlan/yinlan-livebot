@@ -1,7 +1,7 @@
 {
   "name": "yinlan-livebot",
   "version": "0.1.0",
-  "description": "Yinlan (Liveroom Services Only Ver.)",
+  "description": "YinLan (Liveroom Services Only Ver.)",
   "main": "app.js",
   "dependencies": {
     "axios": "^0.27.2",
@@ -19,11 +19,12 @@
     "yaml": "^2.1.1"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "docsify-cli": "^4.4.4"
   },
   "scripts": {
-    "dev": "node app.js",
     "start": "node app.js",
+    "dev": "cross-env NODE_ENV=development node app.js",
     "front-install": "cd yinlan-livebot-front && npm install",
     "front-dev": "cd yinlan-livebot-front && npm run dev",
     "front-preview": "cd yinlan-livebot-front && npm run preview",

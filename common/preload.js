@@ -10,6 +10,14 @@ const { configDB } = require('../db');
 
 module.exports = async function () {
 
+    // 读取环境变量
+    if (process.env.NODE_ENV == 'development') process.env.dev = 1;
+    if (process.env.dev) {
+        logger.info("当前为开发环境");
+        logger.warn("开发环境下身份验证将被禁用");
+    }
+  
+
     // 清空状态数据库
     configDB.prepare(`UPDATE statusConfig SET value = 0;`).run();
 

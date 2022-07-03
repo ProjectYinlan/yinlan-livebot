@@ -13,18 +13,27 @@ const statsCtrl = require('../controllers/dash/stats');
 const controlCtrl = require('../controllers/dash/control');
 
 router.get('/', async (req, res) => {
-    let data = require('../../yinlan-livebot-front/mock/dash.json');
 
-    data.data.stats.overview = await statsCtrl.overview();
-    data.data.stats.bilibili = await statsCtrl.bilibili();
-    data.data.stats.yinlan = await statsCtrl.yinlan();
+    let data = {
+        account: req.session.account,
+        stats: {
+            overview: await statsCtrl.overview(),
+            bilibili: await statsCtrl.bilibili(),
+            yinlan: await statsCtrl.yinlan()
+        },
+        cards: {
+            auditList: await controlCtrl.data.auditList(),
+            liveroomList: await controlCtrl.data.liveroomList(),
+            liveroomOptions: await controlCtrl.data.liveroomOptions(),
+            contactList: await controlCtrl.data.contactList()
+        }
+    };
 
-    data.data.cards.liveroomList = await controlCtrl.data.liveroomList();
-    data.data.cards.auditList = await controlCtrl.data.auditList();
-    data.data.cards.liveroomOptions = await controlCtrl.data.liveroomOptions();
-    data.data.cards.contactList = await controlCtrl.data.contactList();
-
-    res.send(data);
+    res.send({
+        code: 0,
+        msg: null,
+        data
+    });
 });
 
 /**
@@ -98,6 +107,8 @@ router.get('/control/contactList', async (req, res) => {
 /**
  * 控制路由
  */
+router.post('/control/setting/resetConfig', controlCtrl.control.setting.resetConfig);
+
 router.post('/control/auditHandle', controlCtrl.control.auditHandle);
 
 router.post('/control/broadcast', controlCtrl.control.broadcast);

@@ -6,8 +6,6 @@
 
 const axios = require('axios');
 
-const bot = require('../index')();
-
 const { dataDB } = require("../../db");
 const biliCheck = require('./biliCheck');
 
@@ -77,6 +75,8 @@ module.exports = {
      * @param {boolean} atAll
      */
     async bindLiveroom(groupId, uid, atAll) {
+
+        const bot = require('../index')();
 
         let msg = [];
 
@@ -179,6 +179,8 @@ module.exports = {
      * @param {number} uid
      */
     async getLiveroomDetail (uid) {
+
+        const bot = require('../index')();
 
         let data = dataDB.prepare(`
             SELECT liveroom_group.groupId AS id, liveroom_group.atAll AS atAll
