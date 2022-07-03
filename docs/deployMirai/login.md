@@ -61,3 +61,5 @@
 登录成功后长这样：
 
 ![登录成功](../assets/deployMirai/login/loginSucceed.png)
+
+然后您可以前往一下部分了🎉 👉 [安装 Node.js](/deployYinlan/installNode)

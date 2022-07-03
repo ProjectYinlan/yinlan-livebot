@@ -6,7 +6,10 @@ const logger = require('npmlog');
 const randomstring = require('randomstring');
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 const sql = require('better-sqlite3');
+
+const { version } = require('../package.json');
 
 module.exports = async () => {
 
@@ -75,6 +78,10 @@ module.exports = async () => {
 
         logger.info("生成完毕！");
     }
+
+    // 获取版本信息
+    const versionInfo = await axios(`https://yinlan-bot.oss-cn-beijing.aliyuncs.com/livebot/version/${version}/version.json`).then(resp => resp.data);
+    fs.writeFileSync(path.resolve('temp', 'version.json'), JSON.stringify(versionInfo));
 
 
     // 然后判断 link 是否存在

@@ -3,18 +3,11 @@
  */
 
 const logger = require('npmlog');
-const fs = require('fs');
-const path = require('path');
 const axios = require('axios');
 
-const { version } = require('../package.json');
 const { configDB } = require('../db');
 
 module.exports = async function () {
-
-    // 获取版本信息
-    const versionInfo = await axios(`https://yinlan-bot.oss-cn-beijing.aliyuncs.com/livebot/version/${version}/version.json`).then(resp => resp.data);
-    fs.writeFileSync(path.resolve('temp', 'version.json'), JSON.stringify(versionInfo));
 
     // 读取环境变量
     if (process.env.NODE_ENV == 'development') process.env.dev = 1;

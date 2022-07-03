@@ -50,6 +50,9 @@
 
 ## macOS
 
+> 等我的 macOS 机器回家之后立马做（
+
+
 ## Linux
 
 > 我相信使用 Linux 的用户应该可以把官方文档看懂（bushi

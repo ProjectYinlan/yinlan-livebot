@@ -29,7 +29,8 @@
     "front-install": "cd yinlan-livebot-front && npm install",
     "front-dev": "cd yinlan-livebot-front && npm run dev",
     "front-preview": "cd yinlan-livebot-front && npm run preview",
-    "front-build": "cd yinlan-livebot-front && npm run build && node ../build.js"
+    "front-build": "cd yinlan-livebot-front && npm run build && node ../build.js",
+    "docs-dev": "docsify serve docs"
   },
   "repository": {
     "type": "git",
