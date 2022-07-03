@@ -2,12 +2,11 @@
  * 面板数据API stats 路由
  */
 
-const { version } = require('../../../package.json');
+const { version, publish } = require('../../../temp/version.json');
 
 const { dataDB, configDB } = require('../../../db');
 const biliCheck = require('../../../bot/uniControllers/biliCheck');
 
-//  const axios = require('axios');
 const bot = require('../../../bot')();
 
 module.exports = {
@@ -69,13 +68,11 @@ module.exports = {
      * @example
      * {
      *  version: String,
-     *  updateDate: String,
+     *  publish: String,
      *  runningTime: Number
      * }
      */
     async yinlan() {
-
-        let updateDate = "2022.8.1";
 
         let startTime = configDB.prepare(`SELECT value FROM numberConfig WHERE key = 'startTime';`).get();
         let nowTime = (new Date()).getTime();
@@ -83,7 +80,7 @@ module.exports = {
 
         return {
             version,
-            updateDate,
+            publish,
             runningTime
         }
 

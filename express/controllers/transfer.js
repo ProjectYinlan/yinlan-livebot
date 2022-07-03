@@ -3,7 +3,7 @@
  */
 
 const axios = require('axios');
-const biliBind = require('../../bot/uniControllers/biliBind');
+const biliCheck = require('../../bot/uniControllers/biliCheck');
 
 module.exports = {
 
@@ -53,7 +53,7 @@ module.exports = {
 
         const { uid } = req.query;
         
-        let result = await biliBind.getUserInfo(uid);
+        let result = await biliCheck.getUserInfo(uid);
 
         res.send(result);
         

@@ -13,7 +13,6 @@ const common = require('../../../bot/controllers/common');
 const contactManage = require('../../../bot/uniControllers/contactManage');
 const broadcast = require('../../../bot/uniControllers/broadcast');
 const biliCheck = require('../../../bot/uniControllers/biliCheck');
-const biliBind = require('../../../bot/uniControllers/biliBind');
 const bot = require('../../../bot')();
 
 module.exports = {
@@ -250,7 +249,7 @@ module.exports = {
                     return item;
                 })
 
-                let liveroomListResult = biliBind.getUsers();
+                let liveroomListResult = biliCheck.getUsers();
                 if (liveroomListResult.code != 0) {
                     res.send(liveroomListResult);
                     return;
@@ -291,7 +290,7 @@ module.exports = {
                     return;
                 }
 
-                result = await biliBind.bindLiveroom(groupId, uid, atAll);
+                result = await biliCheck.bindLiveroom(groupId, uid, atAll);
                 res.send(result);
 
             },
@@ -310,7 +309,7 @@ module.exports = {
                     return;
                 }
 
-                res.send(await biliBind.getGroupDetail(groupId));
+                res.send(await biliCheck.getGroupDetail(groupId));
 
             },
 
@@ -328,7 +327,7 @@ module.exports = {
                     return;
                 }
 
-                res.send(await biliBind.getLiveroomDetail(uid));
+                res.send(await biliCheck.getLiveroomDetail(uid));
 
             },
 
@@ -350,7 +349,7 @@ module.exports = {
                     return;
                 }
 
-                res.send(await biliBind.setAtAll(uid, groupId, atAll));
+                res.send(await biliCheck.setAtAll(uid, groupId, atAll));
             },
 
             /**
@@ -370,7 +369,7 @@ module.exports = {
                     return;
                 }
 
-                res.send(await biliBind.unbind(uid, groupId));
+                res.send(await biliCheck.unbind(uid, groupId));
 
             },
 
@@ -390,7 +389,7 @@ module.exports = {
                     return;
                 }
 
-                res.send(await biliBind.clearGroup(groupId));
+                res.send(await biliCheck.clearGroup(groupId));
 
             },
 
@@ -410,7 +409,7 @@ module.exports = {
                     return;
                 }
 
-                res.send(await biliBind.removeLiveroom(uid));
+                res.send(await biliCheck.removeLiveroom(uid));
 
             },
 

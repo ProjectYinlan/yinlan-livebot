@@ -4,6 +4,7 @@
 
 // 引入库
 const express = require('express');
+const axios = require('axios');
 
 // 初始化路由
 const router = express.Router();
@@ -13,6 +14,8 @@ const statsCtrl = require('../controllers/dash/stats');
 const controlCtrl = require('../controllers/dash/control');
 
 router.get('/', async (req, res) => {
+
+    const currentVersion = await axios("https://yinlan-bot.oss-cn-beijing.aliyuncs.com/livebot/currentVersion.json").then(resp => resp.data);
 
     let data = {
         account: req.session.account,
@@ -26,7 +29,8 @@ router.get('/', async (req, res) => {
             liveroomList: await controlCtrl.data.liveroomList(),
             liveroomOptions: await controlCtrl.data.liveroomOptions(),
             contactList: await controlCtrl.data.contactList()
-        }
+        },
+        currentVersion
     };
 
     res.send({

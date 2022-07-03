@@ -3,10 +3,10 @@
  */
 
 const logger = require('npmlog');
-
 const randomstring = require('randomstring');
-
 const fs = require('fs');
+const path = require('path');
+const sql = require('better-sqlite3');
 
 module.exports = async () => {
 
@@ -21,15 +21,20 @@ module.exports = async () => {
                        
 
     Author: 玖叁 @colour93
-    GitHub: https://github.com/yinlan-livebot
+    GitHub: https://github.com/colour93/yinlan-livebot
 
     `)
 
-    // 最先检查 配置文件 数据库
-    result = fs.existsSync('config.json');
+    // 检查路径
+    if (!fs.existsSync('data')) {
+        fs.mkdirSync('data');
+    }
+    if (!fs.existsSync('temp')) {
+        fs.mkdirSync('temp');
+    }
 
-    // 不存在就创建生成
-    if (!result) {
+    // 检查 配置文件 数据库
+    if (!fs.existsSync('config.json')) {
 
         logger.info("配置文件不存在，正在生成");
 
@@ -42,18 +47,42 @@ module.exports = async () => {
 
         fs.writeFileSync('config.json', JSON.stringify(configJson, null, 2));
 
-        logger.info("生成完毕！欢迎使用 洇岚 直播助手版~");
-
-        return 1;
+        logger.info("生成完毕！");
     };
+
+    // 判断数据库是否存在
+    if (!fs.existsSync(path.resolve('data', 'data.db'))) {
+
+        logger.info("data 数据库不存在，正在生成");
+
+        fs.closeSync(fs.openSync(path.resolve('data', 'data.db'), 'w'));
+
+        const sqlFile = fs.readFileSync(path.resolve(__dirname, 'template', 'data.sql'), 'utf8');
+
+        sql(path.resolve('data', 'data.db')).exec(sqlFile);
+
+        logger.info("生成完毕！");
+    }
+    if (!fs.existsSync(path.resolve('data', 'config.db'))) {
+
+        logger.info("config 数据库不存在，正在生成");
+
+        fs.closeSync(fs.openSync(path.resolve('data', 'config.db'), 'w'));
+
+        const sqlFile = fs.readFileSync(path.resolve(__dirname, 'template', 'config.sql'), 'utf8');
+
+        sql(path.resolve('data', 'config.db')).exec(sqlFile);
+
+        logger.info("生成完毕！");
+    }
+
 
     // 然后判断 link 是否存在
     if (!require('../config.json').link) {
 
         logger.info("Bot 连接配置文件不存在，进入初始化阶段");
 
-        return 2;
-
+        return 1;
     }
 
     return 0;
