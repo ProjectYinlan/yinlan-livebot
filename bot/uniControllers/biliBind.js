@@ -124,7 +124,7 @@ module.exports = {
             if (result.code) return result;
             msg.push("关注成功")
 
-            changes = dataDB.prepare(`INSERT INTO liverooms (uid, roomId, uname) VALUES (?, ?, ?);`).run(uid, live_room.roomid, name).changes;
+            changes = dataDB.prepare(`INSERT INTO liverooms (uid, roomId, uname, status, flag, ts, pending) VALUES (?, ?, ?, 0, 0, 0, 0);`).run(uid, live_room.roomid, name).changes;
 
             if (!changes) return {
                 code: -500,
@@ -214,6 +214,8 @@ module.exports = {
      * @param {boolean} atAll
      */
     async setAtAll (uid, groupId, atAll) {
+
+        console.log(atAll);
 
         changes = dataDB.prepare(`
             UPDATE liveroom_group

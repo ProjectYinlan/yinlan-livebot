@@ -59,7 +59,8 @@ app.use(session({
 }))
 
 // 调试输出
-if (process.env.dev) {
+if (process.env.MORGAN && process.env.MORGAN == 'true') {
+    logger.info("已启用 HTTP 记录调试输出");
     app.use(morgan('dev'));
 }
 

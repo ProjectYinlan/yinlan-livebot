@@ -6,11 +6,15 @@
 
 该文档下所有教程 Windows 环境均为 Windows 11 21H2 22000.675。
 
-## 大体工作流程
+## 程序工作流程
 
 ![工作流程图](/assets/Q&A/workFlow.png)
 
 > 注：该流程图仅面向没有接触过 Mirai 的用户，为了便于理解，简化了部分，如有不对还请指正
+
+## 直播检测工作流程
+
+![直播检测工作流程图](/assets/Q&A/biliCheckWorkFlow.png)
 
 ## 部署流程
 

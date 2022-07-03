@@ -6,6 +6,7 @@
 const axios = require('axios');
 
 const { configDB } = require("../../db");
+const schedule = require('../schedule');
 
 
 module.exports = {
@@ -256,10 +257,11 @@ module.exports = {
             if (!mode) mode = (await this.getWorkMode()).data.mode;
 
             if (
-                ((mode == 'auth') && (interval >= 10) && (interval <= 90)) ||
-                ((mode == 'anonymous') && (interval >= 60) && (interval <= 90))
+                ((mode == 'auth') && (interval >= 10) && (interval <= 60)) ||
+                ((mode == 'anonymous') && (interval == 60))
             ) {
                 changes = configDB.prepare(`UPDATE numberConfig SET value = ? WHERE key = 'biliCheckInterval';`).run(interval).changes;
+                schedule.biliCheck.reschedule((`*/${interval} * * * * *`));
                 if (!changes) msg.push("biliCheckInterval 修改失败");
             } else {
                 msg.push("interval 值不正确")

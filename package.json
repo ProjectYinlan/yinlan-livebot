@@ -25,6 +25,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "cross-env NODE_ENV=development node app.js",
+    "dev-logger": "cross-env NODE_ENV=development MORGAN=true node app.js",
     "front-install": "cd yinlan-livebot-front && npm install",
     "front-dev": "cd yinlan-livebot-front && npm run dev",
     "front-preview": "cd yinlan-livebot-front && npm run preview",

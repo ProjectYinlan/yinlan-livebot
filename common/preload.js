@@ -33,14 +33,7 @@ module.exports = async function () {
  */
 function startTimer() {
     const ts = (new Date()).getTime();
-    result = configDB.prepare("SELECT value FROM numberConfig WHERE key = 'startTime';").get();
-    if (result) {
-        result = configDB.prepare("UPDATE numberConfig SET value = ? WHERE key = 'startTime';").run(ts);
-    } else {
-        result = configDB.prepare("INSERT INTO numberConfig (key, value) VALUES ('startTime', ?);").run(ts);
-    }
-    if (result.changes) {
-        logger.info("已记录启动时间");
-    }
+    changes = configDB.prepare("UPDATE numberConfig SET value = ? WHERE key = 'startTime';").run(ts).changes;
+    if (changes) logger.info("已记录启动时间");
     return;
 }

@@ -91,7 +91,7 @@ module.exports = {
          * {
          *  mode: auth | anonymous
          *  accountStatus: authed | unauth
-         *  interval: Number (10-90) | (60-90)
+         *  interval: Number (10-60) | (60)
          * }
          */
         async liveroomOptions () {
