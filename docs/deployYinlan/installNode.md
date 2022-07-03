@@ -14,7 +14,7 @@
 
 ## 安装
 
-然后一路下一步（安装路径根据您的喜好选择），安装完之后按 `Win` + `R` 键，输入 `cmd` 并回车，输入 `node --version`，如果显示版本信息，则为安装成功~
+然后一路下一步（安装路径根据您的喜好选择），**Windows 用户**安装完之后按 `Win` + `R` 键，输入 `cmd` 并回车，**macOS / Linux 用户**打开终端，输入 `node --version`，如果显示版本信息，则为安装成功~
 
 ![安装完毕](../assets/deployYinlan/installNode2.png)
 
