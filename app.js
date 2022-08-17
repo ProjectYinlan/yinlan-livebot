@@ -1,6 +1,5 @@
 /**
  * 洇岚 直播助手版
- * 0.1.0
  * 
  * Author: 玖叁 @colour93 (https://github.com/colour93)
  * 

@@ -1,6 +1,6 @@
 {
   "name": "yinlan-livebot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "YinLan (Liveroom Services Only Ver.)",
   "main": "app.js",
   "dependencies": {

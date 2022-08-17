@@ -24,6 +24,7 @@ module.exports = async () => {
                        
 
     Author: 玖叁 @colour93
+    Version: ${version}
     GitHub: https://github.com/colour93/yinlan-livebot
 
     `)
@@ -80,7 +81,13 @@ module.exports = async () => {
     }
 
     // 获取版本信息
-    const versionInfo = await axios(`https://yinlan-bot.oss-cn-beijing.aliyuncs.com/livebot/version/${version}/version.json`).then(resp => resp.data);
+    let versionInfo;
+    if (process.env.NODE_ENV == 'development') {
+        logger.warn("开发环境下版本信息在线获取将关闭");
+        versionInfo = { version, publish: "Dev" };
+    } else {
+        versionInfo = await axios(`https://yinlan-bot.oss-cn-beijing.aliyuncs.com/livebot/version/${version}/version.json`).then(resp => resp.data);
+    }
     fs.writeFileSync(path.resolve('temp', 'version.json'), JSON.stringify(versionInfo));
 
 

@@ -185,7 +185,7 @@ async function biliCheckStatus(liveroomItem) {
 
     // 判断是否达成推送条件
     if (
-        (liveroomItem.status == 1 && liveroomItem.change) ||
+        (liveroomItem.status == 1 && liveroomItem.flag == 2) ||
         (liveroomItem.status == 0 && liveroomItem.flag == 5)
     ) {
 

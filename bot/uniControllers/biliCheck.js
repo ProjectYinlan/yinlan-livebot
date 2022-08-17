@@ -376,40 +376,50 @@ module.exports = {
             msg: "没有找到该群聊"
         }
 
-        // 判断 uid 是否已经关注
-        result = dataDB.prepare(`SELECT * FROM liverooms WHERE uid = ?;`).get(uid);
+        // 判断用户是否存在
+        result = await this.getUserInfo(uid);
+        if (result.code) {
+            if (result.code == -404) {
+                return {
+                    code: -404,
+                    msg: "没有找到该用户"
+                }
+            } else return result;
+        }
+        const { name, live_room } = result.data;
 
-        // 不存在就先关注上
-        if (!result) {
+        // 判断是否开通直播间
+        if (!live_room.roomStatus) {
+            msg.push("该用户未开通直播间");
+        }
 
-            // 判断是否存在
-            result = await this.getUserInfo(uid);
-            if (result.code) {
-                if (result.code == -404) {
-                    return {
-                        code: -404,
-                        msg: "没有找到该用户"
-                    }
-                } else return result;
+
+        // 判断工作模式
+        const { mode } = await this.getWorkMode();
+
+        if (mode == 'auth') {
+
+            // 登录模式
+
+            // 判断 uid 是否已经关注
+            result = dataDB.prepare(`SELECT * FROM liverooms WHERE uid = ?;`).get(uid);
+
+            // 不存在就先关注上
+            if (!result) {
+
+                result = await this.subscribeUser(uid, 1);
+                if (result.code) return result;
+                msg.push("关注成功")
+
             }
-            const { name, live_room } = result.data;
+        }
+        
+        // 匿名模式直接添加条目
+        changes = dataDB.prepare(`INSERT INTO liverooms (uid, roomId, uname, status, flag, ts, pending) VALUES (?, ?, ?, 0, 0, 0, 0);`).run(uid, live_room.roomid, name).changes;
 
-            // 判断是否开通直播间
-            if (!live_room.roomStatus) {
-                msg.push("该用户未开通直播间")
-            }
-
-            result = await this.subscribeUser(uid, 1);
-            if (result.code) return result;
-            msg.push("关注成功")
-
-            changes = dataDB.prepare(`INSERT INTO liverooms (uid, roomId, uname, status, flag, ts, pending) VALUES (?, ?, ?, 0, 0, 0, 0);`).run(uid, live_room.roomid, name).changes;
-
-            if (!changes) return {
-                code: -500,
-                msg: "操作数据库时出现错误"
-            }
-
+        if (!changes) return {
+            code: -500,
+            msg: "操作数据库时出现错误"
         }
 
         // 然后添加条目
