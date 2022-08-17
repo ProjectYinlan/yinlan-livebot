@@ -40,6 +40,10 @@ module.exports = {
         // 获取列表
         let liveroomList = dataDB.prepare(`SELECT * FROM liverooms WHERE roomId != 0;`).all();
 
+        if (process.env.dev) {
+            logger.info(`正在进行直播检测，工作模式：${workMode ? "登录" : "匿名"}`);
+        }
+
         // 判断工作模式
         if (workMode) {
 
@@ -133,7 +137,7 @@ module.exports = {
             // 这次是逻辑循环
             for (let i = 0; i < liveroomList.length; i++) {
                 const liveroomItem = liveroomList[i];
-                await biliCheckStatus(liveroomItem);
+                await biliCheckStatus(liveroomItem, workMode);
             }
 
         } else {
@@ -155,7 +159,7 @@ module.exports = {
 
                 temp = Object.assign(liveroomItem, livingItem);
 
-                await biliCheckStatus(temp);
+                await biliCheckStatus(temp, workMode);
 
             }
 
@@ -166,7 +170,7 @@ module.exports = {
 }
 
 
-async function biliCheckStatus(liveroomItem) {
+async function biliCheckStatus(liveroomItem, workMode) {
 
     let date = new Date();
     let ts = date.getTime();
@@ -185,8 +189,14 @@ async function biliCheckStatus(liveroomItem) {
 
     // 判断是否达成推送条件
     if (
-        (liveroomItem.status == 1 && liveroomItem.flag == 2) ||
-        (liveroomItem.status == 0 && liveroomItem.flag == 5)
+        // 登录模式开播
+        (workMode && liveroomItem.status == 1 && liveroomItem.flag == 2) ||
+        // 登录模式下播
+        (workMode && liveroomItem.status == 0 && liveroomItem.flag == 5) ||
+        // 匿名模式开播
+        (!workMode && liveroomItem.status == 1 && liveroomItem.change) ||
+        // 匿名模式下播
+        (!workMode && liveroomItem.status == 0 && liveroomItem.change)
     ) {
 
         // 推送
