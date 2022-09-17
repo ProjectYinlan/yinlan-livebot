@@ -2,7 +2,7 @@
 
 ## 下载洇岚主程序
 
-首先需要下载洇岚主程序，推荐在 GitHub 下，不过鉴于有些小伙伴科学上网困难，这里提供两个其他下载地址，点击图中位置即可下载。 👉 [GitHub (推荐)](https://github.com/colour93/yinlan-livebot/releases) | [FastGit (推荐)](https://hub.fastgit.xyz/colour93/yinlan-livebot/releases) | [洇岚OSS (beta-v0.1.0)](https://yinlan-bot.oss-cn-beijing.aliyuncs.com/livebot/version/0.1.0/yinlan-livebot-0.1.0.zip)
+首先需要下载洇岚主程序，推荐在 GitHub 下，不过鉴于有些小伙伴科学上网困难，这里提供两个其他下载地址，点击图中位置即可下载。 👉 [GitHub (推荐)](https://github.com/colour93/yinlan-livebot/releases) | [FastGit (推荐)](https://hub.fastgit.xyz/colour93/yinlan-livebot/releases) | [洇岚OSS (beta-v0.1.0)](https://yinlan-bot.oss-cn-beijing.aliyuncs.com/livebot/version/0.1.0-fixed-1/yinlan-livebot-0.1.0-fixed-1.zip)
 
 ![点此下载](../assets/deployYinlan/download.png)
 
